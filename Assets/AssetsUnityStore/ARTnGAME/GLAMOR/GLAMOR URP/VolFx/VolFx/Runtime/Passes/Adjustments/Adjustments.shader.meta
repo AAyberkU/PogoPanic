@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6f8c96284197b074d8e9b5a5b6aa7003
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/VolFx/Runtime/Passes/Adjustments/Adjustments.shader
+  uploadId: 763335

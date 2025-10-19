@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c1ce9992cff452b4c8aec588434ff9d0
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282501
+  packageName: AMS UI Soft Mask
+  packageVersion: 2.0.2
+  assetPath: Assets/AMS/UISoftMask/Shader/Utils/UISoftMaskPass.hlsl
+  uploadId: 758193

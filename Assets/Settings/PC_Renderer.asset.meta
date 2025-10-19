@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6960130cb2f576642a74d69a517694e0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/Settings/PC_Renderer.asset
+  uploadId: 762859

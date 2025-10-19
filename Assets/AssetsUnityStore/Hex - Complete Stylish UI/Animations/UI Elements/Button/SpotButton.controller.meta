@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 34dd9e3e1c4dfc2439735cd0a69f3899
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Animations/UI Elements/Button/SpotButton.controller
+  uploadId: 718230

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 46451ced1fc3a8f46ad56872a176a9c8
+timeCreated: 1711352594
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/VolFx/Runtime/Passes/Mask/Mask.shader
+  uploadId: 763335

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e266c60b41c564249b03a2abe456de3b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Models/Pogostick_T.mat
+  uploadId: 762859

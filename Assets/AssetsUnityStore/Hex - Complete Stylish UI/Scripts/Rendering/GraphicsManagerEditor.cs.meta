@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5868e3c0a2a5f584d923705e204e3fbb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Scripts/Rendering/GraphicsManagerEditor.cs
+  uploadId: 718230

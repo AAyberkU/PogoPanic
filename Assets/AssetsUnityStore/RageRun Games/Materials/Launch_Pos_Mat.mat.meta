@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c83ddd1f28f3e1c49b3b9e5a45fb9f4b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Materials/Launch_Pos_Mat.mat
+  uploadId: 762859

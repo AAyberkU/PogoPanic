@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: ca5fb2b494d13874b8c6d967d7657fc9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _owner: {instanceID: 0}
+  - _shader: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/GradientMapFilterFx/Runtime/GradientMap/GradientMapPass.cs
+  uploadId: 763335

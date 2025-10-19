@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: bc7ba8e3160996e458d3196101b63f56
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/Tools/Runtime/VolFxBuffers.cs
+  uploadId: 763335

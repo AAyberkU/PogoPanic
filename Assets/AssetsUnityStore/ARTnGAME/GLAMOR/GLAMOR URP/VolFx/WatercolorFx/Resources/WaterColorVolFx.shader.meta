@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b340a94284e289b4b99850710b816d48
+timeCreated: 1490569563
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/WatercolorFx/Resources/WaterColorVolFx.shader
+  uploadId: 763335

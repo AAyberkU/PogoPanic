@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cc8fb741f72b23442ba57838e7770144
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282501
+  packageName: AMS UI Soft Mask
+  packageVersion: 2.0.2
+  assetPath: Assets/AMS/UISoftMask/AMSUISoftMask.asmdef
+  uploadId: 758193

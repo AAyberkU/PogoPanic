@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 98426df9a669e3045ad47c94d7c85b9c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - material: {fileID: -876546973899608171, guid: 5d0f93ba092e5a545bab40b50ba2861e,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/DuotoneFX/Runtime/DuotoneGLAMORFeature.cs
+  uploadId: 763335

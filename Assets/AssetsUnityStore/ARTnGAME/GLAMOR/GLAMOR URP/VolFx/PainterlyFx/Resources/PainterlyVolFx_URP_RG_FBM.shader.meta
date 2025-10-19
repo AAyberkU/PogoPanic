@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2062078932eb6d44f90b7623ef0d3667
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/PainterlyFx/Resources/PainterlyVolFx_URP_RG_FBM.shader
+  uploadId: 763335

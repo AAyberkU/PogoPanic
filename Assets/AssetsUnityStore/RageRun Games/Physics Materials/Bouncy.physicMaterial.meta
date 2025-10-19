@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 95bca8cf95b5af94db52cb8b6a172b53
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Physics Materials/Bouncy.physicMaterial
+  uploadId: 762859

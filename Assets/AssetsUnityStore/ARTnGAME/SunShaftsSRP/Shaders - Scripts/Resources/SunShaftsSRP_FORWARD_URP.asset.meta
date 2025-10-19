@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4bd59ce5103a84f4fa074ea6923e81eb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SunShaftsSRP/Shaders - Scripts/Resources/SunShaftsSRP_FORWARD_URP.asset
+  uploadId: 763335

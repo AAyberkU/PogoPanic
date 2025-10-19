@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bb7ef08e2a2a5274d9c6a2a698f25191
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Materials/Wall_Mat.mat
+  uploadId: 762859

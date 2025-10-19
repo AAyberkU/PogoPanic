@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a11cf2e810c8e804ca1d966a0ab7de38
+timeCreated: 1549333968
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: -1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 138857
+  packageName: POLYGON Sci-Fi Space - Low Poly 3D Art by Synty
+  packageVersion: 1.13.1
+  assetPath: Assets/PolygonSciFiSpace/Materials/FX/FX_Steam_Mat.mat
+  uploadId: 737404

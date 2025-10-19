@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/New Universal Render Pipeline Asset 2D.asset.meta
+guid: c3ddf71f2432d8245aba30c655851d0b
+NativeFormatImporter:
+========
+guid: 3e09d039497e6be44a2875ac65889c41
+PrefabImporter:
+>>>>>>>> 196b627 (加入闪电，以及更新击中):Assets/MasterStylizedFX/Prefabs/Hit/PunchHitGreen.prefab.meta
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

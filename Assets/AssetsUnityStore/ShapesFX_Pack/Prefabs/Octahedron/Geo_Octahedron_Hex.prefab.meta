@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 576cb1c5f4c830449b36a21effe55ce6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156638
+  packageName: Shapes FX Pack
+  packageVersion: 1.7
+  assetPath: Assets/ShapesFX_Pack/Prefabs/Octahedron/Geo_Octahedron_Hex.prefab
+  uploadId: 677549

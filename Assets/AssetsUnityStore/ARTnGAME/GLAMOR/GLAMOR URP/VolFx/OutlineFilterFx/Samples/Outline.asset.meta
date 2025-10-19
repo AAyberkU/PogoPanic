@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c30db2e2352f8104895a9b5c50141bb6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/OutlineFilterFx/Samples/Outline.asset
+  uploadId: 763335

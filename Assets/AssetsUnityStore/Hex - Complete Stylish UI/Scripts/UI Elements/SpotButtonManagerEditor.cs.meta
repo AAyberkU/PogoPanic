@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 988e28b86ac2f1c46a2cec1db1d6e8ae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Scripts/UI Elements/SpotButtonManagerEditor.cs
+  uploadId: 718230

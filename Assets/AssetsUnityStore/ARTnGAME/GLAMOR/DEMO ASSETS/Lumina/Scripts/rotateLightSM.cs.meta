@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 67d2d2503e545434f8fbeea47feae918
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/DEMO ASSETS/Lumina/Scripts/rotateLightSM.cs
+  uploadId: 763335

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0b01355753dc9e34ab7d7be0dbe38b0b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Scripts/UI Elements/LobbyPlayerEditor.cs
+  uploadId: 718230

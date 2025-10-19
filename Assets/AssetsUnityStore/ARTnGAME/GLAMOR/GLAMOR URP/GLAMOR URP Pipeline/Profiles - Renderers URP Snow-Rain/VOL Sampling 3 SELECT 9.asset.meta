@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f4a13e96e15d14c40a151520bb38cc0a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/GLAMOR URP Pipeline/Profiles - Renderers
+    URP Snow-Rain/VOL Sampling 3 SELECT 9.asset
+  uploadId: 763335

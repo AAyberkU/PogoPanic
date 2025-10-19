@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 48d89927860ab44449c468449d8bd3f7
+timeCreated: 1490569563
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/LensFlareFx/Resources/AllFlarePassesVolFx.shader
+  uploadId: 763335

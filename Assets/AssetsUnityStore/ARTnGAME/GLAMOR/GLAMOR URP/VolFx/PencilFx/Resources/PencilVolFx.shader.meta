@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8785cdba90a8e8947b8be8cad71a48eb
+timeCreated: 1490569563
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/PencilFx/Resources/PencilVolFx.shader
+  uploadId: 763335

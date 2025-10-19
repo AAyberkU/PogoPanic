@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3531160c70b1f594a95b72b0e92eb1f1
+ComputeShaderImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/EyeAdapt/Resources/Shaders/EyeHistogram.compute
+  uploadId: 763335

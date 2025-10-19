@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 82f6c9789cbd2c147926c4bdfde0c476
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/SuperSample/SUPER SAMPLE TEXTURE.renderTexture
+  uploadId: 763335

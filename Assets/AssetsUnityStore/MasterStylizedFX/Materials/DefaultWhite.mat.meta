@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/MasterStylizedFX/Materials/DefaultWhite.mat.meta
+guid: c515f6bee89fa54439f22b19b02c30ad
+NativeFormatImporter:
+========
+guid: 6280e8f4a796a83438e50bf21981e66b
+PrefabImporter:
+>>>>>>>> 196b627 (加入闪电，以及更新击中):Assets/MasterStylizedFX/Prefabs/Hit/PunchHitBlue.prefab.meta
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

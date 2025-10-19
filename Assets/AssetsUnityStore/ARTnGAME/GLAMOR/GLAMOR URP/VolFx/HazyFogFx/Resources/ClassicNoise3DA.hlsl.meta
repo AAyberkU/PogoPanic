@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d53e2c5f008734e43a9c9b2a5d3e5917
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/HazyFogFx/Resources/ClassicNoise3DA.hlsl
+  uploadId: 763335

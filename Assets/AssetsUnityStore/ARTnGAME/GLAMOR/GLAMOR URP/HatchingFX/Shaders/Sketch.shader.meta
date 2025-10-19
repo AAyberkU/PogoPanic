@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 468ce78e6be851043bf640d84f931306
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/HatchingFX/Shaders/Sketch.shader
+  uploadId: 763335

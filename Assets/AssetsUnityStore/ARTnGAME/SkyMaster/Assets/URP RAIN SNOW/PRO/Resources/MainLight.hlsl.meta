@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7a9a1a927da6f9942809c1e337fe8b53
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/PRO/Resources/MainLight.hlsl
+  uploadId: 763335

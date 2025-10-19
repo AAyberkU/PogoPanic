@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1dae9f5f119be72448e511163ac1dc96
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SunShaftsSRP/Shaders - Scripts/URP Version/New Render
+    Texture SKYBOX ONLY.renderTexture
+  uploadId: 763335

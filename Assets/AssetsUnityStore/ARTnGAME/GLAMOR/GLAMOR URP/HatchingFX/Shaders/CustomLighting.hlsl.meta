@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 096fb1283f9a8f549b57bf8c54bd55a6
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/HatchingFX/Shaders/CustomLighting.hlsl
+  uploadId: 763335

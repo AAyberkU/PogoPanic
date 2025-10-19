@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3a9b1ea6172ba1248aab1a27642b1fe6
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/EyeAdapt/Resources/Shaders/EyeAdaptation.cginc
+  uploadId: 763335

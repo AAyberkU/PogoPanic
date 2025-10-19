@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e70502f25df91e44d9153fccb4a8847e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Animations/UI Elements/Widgets/News
+    Slider/NewsItem.controller
+  uploadId: 718230

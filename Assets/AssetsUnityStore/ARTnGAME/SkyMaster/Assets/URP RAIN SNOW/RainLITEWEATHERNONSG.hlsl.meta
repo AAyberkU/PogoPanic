@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3ef263fa92b853a49b5c5d8f8e8ab003
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/RainLITEWEATHERNONSG.hlsl
+  uploadId: 763335

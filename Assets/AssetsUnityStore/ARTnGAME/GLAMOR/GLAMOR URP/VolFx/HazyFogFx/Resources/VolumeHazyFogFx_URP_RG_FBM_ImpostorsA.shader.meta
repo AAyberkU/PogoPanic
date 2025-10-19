@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 061ad1f30b1d7e043aa3f7ed58edc345
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/HazyFogFx/Resources/VolumeHazyFogFx_URP_RG_FBM_ImpostorsA.shader
+  uploadId: 763335

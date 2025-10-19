@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 370b26b6b5dcd6648b25bdeaf1339e74
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Animations/Spinners/HexagonSpinner_In.anim
+  uploadId: 718230

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3914682d9f2cb4b4ba5915b743f6b438
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {fileID: 2800000, guid: 64a4e91e49c47ff43bca222df783bad0, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282501
+  packageName: AMS UI Soft Mask
+  packageVersion: 2.0.2
+  assetPath: Assets/AMS/UISoftMask/Scripts/ScrollRectSoftMaskHandler.cs
+  uploadId: 758193

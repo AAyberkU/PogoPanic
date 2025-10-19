@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b019855658ea5dd42a0fabb9a601e3fe
+timeCreated: 1499815138
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156638
+  packageName: Shapes FX Pack
+  packageVersion: 1.7
+  assetPath: Assets/ShapesFX_Pack/Materials/Materials_Dynamic/M_Hi_Torus_DynamicSample.mat
+  uploadId: 677549

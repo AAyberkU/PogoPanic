@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1b65ff93f144b7347a13f0e5b590e1a2
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/ShaderLibs/FBM.cginc
+  uploadId: 763335

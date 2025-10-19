@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 03b04726a44593b47979bfae5aaa3af4
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/Skybox-Procedural_SkyMaster
+    MAIN U5 TEXTURED v3 DITHER Galaxy.shader
+  uploadId: 763335

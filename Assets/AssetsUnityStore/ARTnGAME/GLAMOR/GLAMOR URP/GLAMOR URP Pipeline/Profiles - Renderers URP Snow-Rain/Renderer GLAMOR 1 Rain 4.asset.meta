@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6ab67f2a4d8abf545a1658a81986d6a7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/GLAMOR URP Pipeline/Profiles - Renderers
+    URP Snow-Rain/Renderer GLAMOR 1 Rain 4.asset
+  uploadId: 763335

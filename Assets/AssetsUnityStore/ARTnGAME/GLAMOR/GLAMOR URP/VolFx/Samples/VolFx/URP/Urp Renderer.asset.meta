@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a0e9ca6b2eee51f4493737c762e22992
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/Samples/VolFx/URP/Urp Renderer.asset
+  uploadId: 763335

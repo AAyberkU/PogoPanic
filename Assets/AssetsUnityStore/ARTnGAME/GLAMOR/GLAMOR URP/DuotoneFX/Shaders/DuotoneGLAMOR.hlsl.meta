@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9e31f1014b50e9c4aab328dca737b219
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/DuotoneFX/Shaders/DuotoneGLAMOR.hlsl
+  uploadId: 763335

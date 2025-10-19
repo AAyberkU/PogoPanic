@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: dadd0c3076da5c8429da4c571a346464
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/GLAMOR URP Pipeline/Profiles - Renderers
+    URP Snow-Rain/Renderer GLAMOR 1 Rain 5 HATCH 5 BLOOMY.asset
+  uploadId: 763335

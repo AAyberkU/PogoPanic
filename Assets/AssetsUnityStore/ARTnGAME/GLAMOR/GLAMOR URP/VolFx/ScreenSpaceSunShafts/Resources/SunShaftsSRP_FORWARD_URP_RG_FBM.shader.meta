@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3e3d87b6338479946927536c1a5c1bb7
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/ScreenSpaceSunShafts/Resources/SunShaftsSRP_FORWARD_URP_RG_FBM.shader
+  uploadId: 763335

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 08f772f3c37ee1d49918bc58eb30ab96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Scripts/Rendering/UIGradientEditor.cs
+  uploadId: 718230

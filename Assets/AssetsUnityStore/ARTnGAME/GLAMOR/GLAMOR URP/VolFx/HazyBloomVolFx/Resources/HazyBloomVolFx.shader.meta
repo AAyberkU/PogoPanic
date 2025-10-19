@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 05d597a72069e9b4ca215f1c56ad3140
+timeCreated: 1490569563
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/HazyBloomVolFx/Resources/HazyBloomVolFx.shader
+  uploadId: 763335

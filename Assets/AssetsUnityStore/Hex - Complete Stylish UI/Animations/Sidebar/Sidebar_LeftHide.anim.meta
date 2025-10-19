@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 788f0e2075bd8a2469ac7b3358c1dc73
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Animations/Sidebar/Sidebar_LeftHide.anim
+  uploadId: 718230

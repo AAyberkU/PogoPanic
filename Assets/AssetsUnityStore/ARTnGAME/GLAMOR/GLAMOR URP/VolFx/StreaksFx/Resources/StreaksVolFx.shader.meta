@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a307067af2c0d1946a4ba9f4465ca241
+timeCreated: 1490569563
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/StreaksFx/Resources/StreaksVolFx.shader
+  uploadId: 763335

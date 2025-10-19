@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 268ed7ce7378e344fbee4940a39051dd
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/PRO/Resources/OutlineMAIN
+    WEATHER LITE Rain.shadergraph
+  uploadId: 763335

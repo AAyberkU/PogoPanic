@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 34970bfef0c538a409d12e3dc510ac4c
+timeCreated: 1699536989
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/OutlineFilterFx/Runtime/Outline/Outline.shader
+  uploadId: 763335

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aabe3fd1259d74f40b8eeaf4f942190b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156638
+  packageName: Shapes FX Pack
+  packageVersion: 1.7
+  assetPath: Assets/ShapesFX_Pack/Prefabs/Icosahedron/Geo_Icosahedron.prefab
+  uploadId: 677549

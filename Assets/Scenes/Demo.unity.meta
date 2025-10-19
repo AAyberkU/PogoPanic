@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 950ff9fc562f4de4387c2886c6c044a6
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/Scenes/Demo.unity
+  uploadId: 762859

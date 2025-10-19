@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2ad9157ca724b5245ab8f9e9906e5536
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Physics Materials/Frictionless.physicMaterial
+  uploadId: 762859

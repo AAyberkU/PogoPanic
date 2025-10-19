@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2a1bc11ab5f47fd42a08b54db7835bd0
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/VolumeFogFx/Resources/VolumeFogFx_URP_RG_FBM.shader
+  uploadId: 763335

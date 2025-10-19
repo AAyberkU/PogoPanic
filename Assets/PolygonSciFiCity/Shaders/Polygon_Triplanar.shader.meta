@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c893f30c539273f49af347b8c94d1276
+timeCreated: 1523930420
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 115950
+  packageName: POLYGON Sci-Fi City - Low Poly 3D Art by Synty
+  packageVersion: 1.2.4
+  assetPath: Assets/PolygonSciFiCity/Shaders/Polygon_Triplanar.shader
+  uploadId: 756032

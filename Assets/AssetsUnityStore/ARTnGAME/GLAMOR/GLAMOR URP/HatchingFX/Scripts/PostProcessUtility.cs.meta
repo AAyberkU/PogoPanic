@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d1a3a8df4cd24544caca6cd13bd343e5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/HatchingFX/Scripts/PostProcessUtility.cs
+  uploadId: 763335

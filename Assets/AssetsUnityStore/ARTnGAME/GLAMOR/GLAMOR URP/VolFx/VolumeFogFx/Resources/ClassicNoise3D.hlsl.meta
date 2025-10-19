@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 903a784308bcb6742a5f2f5209e1ca96
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/VolumeFogFx/Resources/ClassicNoise3D.hlsl
+  uploadId: 763335

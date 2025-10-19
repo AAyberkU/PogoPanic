@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: dff76723f967b5f499f3a73c415bb57f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 252331
+  packageName: Hex - Complete Stylish UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Hex - Complete Stylish UI/Scripts/UI Elements/NotificationManagerEditor.cs
+  uploadId: 718230

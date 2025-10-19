@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2bf2830f83506eb4097cdebfd30a7bb8
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/PixelationFx/Pixelation/Pixelation.shader
+  uploadId: 763335

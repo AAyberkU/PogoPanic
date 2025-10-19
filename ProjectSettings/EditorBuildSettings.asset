@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 944a99bfa8f852e4f9b39f932126dfed
+  - enabled: 0
+    path: Assets/Scenes/GameplayScene.unity
+    guid: b8ad7cd8d49d34a4eaa5ee3c8fc55b61
+  - enabled: 0
+    path: Assets/Scenes/Demo_v1.unity
+    guid: dc15cdc41c69e10429d0d202d0faea1b
+  - enabled: 0
+    path: Assets/Scenes/Flip.unity
+    guid: f70df41875e689d4da1511208b9ecae0
+  - enabled: 0
+    path: Assets/Scenes/Flip 2.unity
+    guid: efcf37f39adbaee47aa3b3dded32c9fc
+  - enabled: 1
+    path: Assets/Scenes/FlippedDemo.unity
+    guid: a799c0f5955d55f4ea14984c0772ba49
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0

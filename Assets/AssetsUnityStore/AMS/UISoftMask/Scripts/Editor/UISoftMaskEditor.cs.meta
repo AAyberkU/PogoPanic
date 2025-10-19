@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 55c655b3b214ead409871b1d1bb8c443
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282501
+  packageName: AMS UI Soft Mask
+  packageVersion: 2.0.2
+  assetPath: Assets/AMS/UISoftMask/Scripts/Editor/UISoftMaskEditor.cs
+  uploadId: 758193

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c0591cb928a1bd74b92c0ca4c74e3c56
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/Tools/Runtime/Utils/RenderTarget.cs
+  uploadId: 763335

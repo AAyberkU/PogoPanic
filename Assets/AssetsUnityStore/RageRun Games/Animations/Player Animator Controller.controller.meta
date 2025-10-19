@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 749c2f7634efd5b4c8c950e795fa2cab
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 321955
+  packageName: Pogo Stick Controller
+  packageVersion: 1.0.1
+  assetPath: Assets/AssetsUnityStore/RageRun Games/Animations/Player Animator Controller.controller
+  uploadId: 762859

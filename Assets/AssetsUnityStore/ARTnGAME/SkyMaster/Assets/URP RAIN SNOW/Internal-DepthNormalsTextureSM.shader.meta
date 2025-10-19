@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b3896c516fbf24e4a8e0b83a63eebf28
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/SkyMaster/Assets/URP RAIN SNOW/Internal-DepthNormalsTextureSM.shader
+  uploadId: 763335

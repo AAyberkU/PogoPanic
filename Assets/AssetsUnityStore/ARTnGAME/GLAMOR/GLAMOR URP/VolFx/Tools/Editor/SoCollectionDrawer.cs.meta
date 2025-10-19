@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a293a8c1f3ae2e84e98bfd1f5ac06977
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/Tools/Editor/SoCollectionDrawer.cs
+  uploadId: 763335

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7611590ec3824f64586b1babd37f721e
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/HatchingShader/LICENSE.txt
+  uploadId: 763335

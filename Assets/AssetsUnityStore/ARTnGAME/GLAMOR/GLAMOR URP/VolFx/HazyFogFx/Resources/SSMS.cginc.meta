@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 86a35ff238d178f46bc75dd44103f776
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/HazyFogFx/Resources/SSMS.cginc
+  uploadId: 763335

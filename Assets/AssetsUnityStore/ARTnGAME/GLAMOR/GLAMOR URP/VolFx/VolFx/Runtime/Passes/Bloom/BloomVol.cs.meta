@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 8fcde6d3670267541a7ecedf8793e2cf
+timeCreated: 1693998281
+AssetOrigin:
+  serializedVersion: 1
+  productId: 282274
+  packageName: GLAMOR Advanced Image Effects
+  packageVersion: 2.0.1
+  assetPath: Assets/ARTnGAME/GLAMOR/GLAMOR URP/VolFx/VolFx/Runtime/Passes/Bloom/BloomVol.cs
+  uploadId: 763335
