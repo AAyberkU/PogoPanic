@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody), typeof(NetworkObject))]
 public class Projectile : NetworkBehaviour
@@ -25,6 +26,9 @@ public class Projectile : NetworkBehaviour
 #else
             rb.velocity = initialVelocity;
 #endif
+            // YENİ: ilk fizik adımına kadar interpolation kapat
+            StartInterpolationFix();
+
             InitClientRpc(life, initialVelocity);
         }
     }
@@ -39,7 +43,24 @@ public class Projectile : NetworkBehaviour
 #else
         rb.velocity = initialVelocity;
 #endif
+        // YENİ: client instance'ında da aynı tek-frame fix
+        StartInterpolationFix();
     }
+
+    // --- YENİ: tek-frame interpolation kapatma/açma yardımcıları ---
+    private void StartInterpolationFix()
+    {
+        var prev = rb.interpolation;
+        rb.interpolation = RigidbodyInterpolation.None;
+        StartCoroutine(RestoreInterpolationNextFixed(prev));
+    }
+
+    private IEnumerator RestoreInterpolationNextFixed(RigidbodyInterpolation restoreTo)
+    {
+        yield return new WaitForFixedUpdate(); // ilk physics step
+        rb.interpolation = restoreTo;
+    }
+    // ----------------------------------------------------------------
 
     void Update()
     {

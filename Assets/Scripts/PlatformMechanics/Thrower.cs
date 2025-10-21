@@ -45,7 +45,9 @@ public class Thrower : NetworkBehaviour
     void Shoot()
     {
         Vector3 dir = GetDirectionVector();
-        Rigidbody rb = Instantiate(projectilePrefab, spawnPoint.position, Quaternion.identity);
+
+        // DEĞİŞİKLİK: rotation -> spawnPoint.rotation
+        Rigidbody rb = Instantiate(projectilePrefab, spawnPoint.position, spawnPoint.rotation);
 
         var no   = rb.GetComponent<NetworkObject>();
         var proj = rb.GetComponent<Projectile>();

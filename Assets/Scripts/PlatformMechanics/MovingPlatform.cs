@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using DG.Tweening; // sadece DOVirtual.EasedValue için
+using DG.Tweening; // yalnız Ease için
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody), typeof(NetworkObject), typeof(MotionClockMove))]
@@ -23,18 +23,23 @@ public class MovingPlatform : NetworkBehaviour
     [Header("Player Tag")]
     public string playerTag = "Player";
 
-    // ---- internals ----
-    private Rigidbody      rb;
+    [Header("Robustness")]
+    [Tooltip("Kısa süreli temas kopmalarında tetikleme/hâlâ temas var sayma toleransı")]
+    [SerializeField] private float coyoteTime = 0.15f;
+
+    // ─── internals ─────────────────────────────────────────────────────
+    private Rigidbody rb;
     private MotionClockMove clock;
 
     private Vector3 startPos;
-    private Vector3 lastPlatformPos;
+    private Vector3 lastPlatformPos; // yalnız çizim/inspect için
 
     private float legDuration;
     private float singleRunDuration;
     private float loopCycleDuration;
 
-    private readonly Dictionary<Rigidbody, Vector3> riderLocalPos = new();
+    // Son görülen temas zamanları (rider başına)
+    private readonly Dictionary<Rigidbody, float> lastSeenContactTime = new();
 
     // Gate: Triggered modda tetiklenene kadar hareket etme
     private readonly NetworkVariable<bool> allowMoveNV =
@@ -63,8 +68,7 @@ public class MovingPlatform : NetworkBehaviour
         {
             if (moveStyle == MoveStyle.Triggered)
             {
-                // Gate kapalı başlasın
-                allowMoveNV.Value = false;
+                allowMoveNV.Value = false;     // kapalı başla
                 rb.MovePosition(startPos);
                 lastPlatformPos = startPos;
             }
@@ -72,7 +76,7 @@ public class MovingPlatform : NetworkBehaviour
             {
                 clock.SetTimeScale(1f);
                 clock.StartMotion();
-                allowMoveNV.Value = true; // AutoLoop açık
+                allowMoveNV.Value = true;      // AutoLoop açık
             }
         }
     }
@@ -93,7 +97,7 @@ public class MovingPlatform : NetworkBehaviour
 
     void FixedUpdate()
     {
-        // --- SERVER: Triggered koşusu bittiyse gate'i kapat ve clock'u durdur ---
+        // ── SERVER: Triggered tek tur bitince kapat ─────────────────────
         if (IsServer && moveStyle == MoveStyle.Triggered && allowMoveNV.Value && RunActive)
         {
             if (clock.EffectiveTimeUnscaled >= singleRunDuration)
@@ -106,11 +110,27 @@ public class MovingPlatform : NetworkBehaviour
             }
         }
 
-        // --- Pozisyonu uygula ---
+        // ── Coyote fallback: kısa kopma olduysa hâlâ temas say ──────────
+        if (IsServer && moveStyle == MoveStyle.Triggered && !allowMoveNV.Value && coyoteTime > 0f)
+        {
+            float now = Time.time;
+            foreach (var kvp in lastSeenContactTime)
+            {
+                if (kvp.Key == null) continue;
+                if (now - kvp.Value <= coyoteTime)
+                {
+                    // Temas yakın geçmişte vardı → tetikle
+                    RequestTriggerServerRpc();
+                    break;
+                }
+            }
+        }
+
+        // ── Pozisyonu uygula ────────────────────────────────────────────
         Vector3 newPos;
         if (moveStyle == MoveStyle.Triggered && !allowMoveNV.Value)
         {
-            newPos = startPos; // saat çalışsa da gate kapalıyken hareket etme
+            newPos = startPos; // clock aksa bile gate kapalı iken hareket yok
         }
         else
         {
@@ -118,115 +138,66 @@ public class MovingPlatform : NetworkBehaviour
         }
 
         rb.MovePosition(newPos);
-
-        // --- Rider taşıma ---
-        float deltaY = newPos.y - lastPlatformPos.y;
-
-        foreach (var kvp in riderLocalPos)
-        {
-            var rider = kvp.Key;
-            if (rider == null) continue;
-
-            Vector3 worldOffset = transform.TransformPoint(kvp.Value);
-
-            float desiredY = (deltaY < 0f)
-                ? Mathf.Max(rider.position.y, worldOffset.y)
-                : rider.position.y;
-
-            Vector3 riderTarget = new Vector3(worldOffset.x, desiredY, worldOffset.z);
-            rider.MovePosition(riderTarget);
-        }
-
         lastPlatformPos = newPos;
     }
 
+    // ─── Temas olayları (ÜSTTE/YANDA/ALTTAN ayrımı YOK) ────────────────
     void OnCollisionEnter(Collision col)
     {
-        TryHandleRiderAndTrigger(col);
+        HandleContact(col);
     }
 
     void OnCollisionStay(Collision col)
     {
-        // Bazen Enter frame'inde hız/normal koşulları kaçabilir; Stay'de de dene.
-        TryHandleRiderAndTrigger(col);
-    }
-
-    private void TryHandleRiderAndTrigger(Collision col)
-    {
-        var riderRb = col.collider.attachedRigidbody;
-        if (riderRb == null) return;
-        if (!riderRb.CompareTag(playerTag)) return;
-
-        // local offset’i bir kere kaydet
-        if (!riderLocalPos.ContainsKey(riderRb))
-            riderLocalPos[riderRb] = transform.InverseTransformPoint(riderRb.position);
-
-        if (moveStyle == MoveStyle.Triggered && !allowMoveNV.Value)
-        {
-            if (IsTopContact(col, riderRb))
-            {
-#if UNITY_EDITOR
-                Debug.Log($"[Platform:{name}] Top contact detected -> request trigger");
-#endif
-                RequestTriggerServerRpc();
-            }
-        }
-    }
-
-    // ---- daha sağlam üstten iniş tespiti ----
-    private bool IsTopContact(Collision col, Rigidbody rider)
-    {
-        // 1) Rider yukarıda mı?
-        bool above = rider.worldCenterOfMass.y >= (transform.position.y + 0.05f);
-
-        // 2) İniş hızı var mı?
-        bool falling = col.relativeVelocity.y < -0.05f;
-
-        // 3) En az bir contact normal yukarı bakıyor mu?
-        bool normalUp = false;
-        foreach (var c in col.contacts)
-        {
-            if (Vector3.Dot(c.normal, Vector3.up) > 0.25f) // toleransı genişlettik
-            {
-                normalUp = true;
-                break;
-            }
-        }
-
-#if UNITY_EDITOR
-        if (!(above && (falling || normalUp)))
-        {
-            // Gözlemlemek istersen uncomment et
-            // Debug.Log($"[Platform:{name}] above:{above} falling:{falling} normalUp:{normalUp}");
-        }
-#endif
-
-        return above && (falling || normalUp);
+        HandleContact(col);
     }
 
     void OnCollisionExit(Collision col)
     {
         var riderRb = col.collider.attachedRigidbody;
-        if (riderRb != null)
-            riderLocalPos.Remove(riderRb);
+        if (riderRb == null) return;
+        if (!riderRb.CompareTag(playerTag)) return;
+
+        // Çıkış anını kaydet (coyote için)
+        lastSeenContactTime[riderRb] = Time.time;
     }
 
-    // --------- Trigger akışı (server-authoritative) ---------
+    private void HandleContact(Collision col)
+    {
+        var riderRb = col.collider.attachedRigidbody;
+        if (riderRb == null) return;
+        if (!riderRb.CompareTag(playerTag)) return;
+
+        // Son görülen zamanı sürekli güncelle (Enter/Stay)
+        lastSeenContactTime[riderRb] = Time.time;
+
+        // Triggered modda gate kapalıysa: ANINDA tetikle
+        if (moveStyle == MoveStyle.Triggered && !allowMoveNV.Value)
+        {
+#if UNITY_EDITOR
+            Debug.Log($"[Platform:{name}] Contact -> request trigger");
+#endif
+            RequestTriggerServerRpc();
+        }
+    }
+
+    // ─── Trigger akışı (server-authoritative) ──────────────────────────
     [ServerRpc(RequireOwnership = false)]
     private void RequestTriggerServerRpc(ServerRpcParams rpc = default)
     {
         if (moveStyle != MoveStyle.Triggered) return;
+        if (allowMoveNV.Value) return; // zaten açık
 
         allowMoveNV.Value = true;
         clock.ResetClock(true); // aktif + ET=0
         clock.StartMotion();
 
 #if UNITY_EDITOR
-        Debug.Log($"[Platform:{name}] TRIGGERED by client -> gate ON, clock START");
+        Debug.Log($"[Platform:{name}] TRIGGERED -> gate ON, clock START");
 #endif
     }
 
-    // ----------------- Yardımcılar -----------------
+    // ─── Yardımcılar ───────────────────────────────────────────────────
     private void BindStartAndRecompute()
     {
         startPos = transform.position;
@@ -300,7 +271,7 @@ public class MovingPlatform : NetworkBehaviour
             Gizmos.DrawLine(startPos, targetPoint.position);
             Gizmos.DrawSphere(startPos, 0.06f);
             Gizmos.DrawSphere(targetPoint.position, 0.06f);
-        }
+        } 
     }
 #endif
 }

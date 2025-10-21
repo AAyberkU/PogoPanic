@@ -1,11 +1,12 @@
 using System.Collections;
 using RageRunGames.PogostickController;
 using UnityEngine;
-using Unity.Netcode;  // ← eklendi
+using Unity.Netcode;
 
 [RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(NetworkObject))] // ← FX yaymak için gerekli
-public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehaviour
+[RequireComponent(typeof(Rigidbody))]          // YENİ: RB garanti
+[RequireComponent(typeof(NetworkObject))]      // FX yaymak için gerekli
+public class JumpPad : NetworkBehaviour
 {
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 20f;
@@ -22,29 +23,16 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
     //--------------------------------------------------------------------
     private void Reset()
     {
-        // Make collider a Trigger for classic “blue portal” behaviour,
-        // but the script also works if you uncheck this and rely on collisions.
+        // Trigger davranışı (orijinalinle aynı niyet)
         GetComponent<Collider>().isTrigger = true;
-
-        // Guarantee a kinematic RB so callbacks fire even if the player's
-        // collider lives on a child without a rigidbody.
-        EnsureKinematicRigidbody();
     }
 
-    private void Awake() => EnsureKinematicRigidbody();
-
-    private void EnsureKinematicRigidbody()
+    private void Awake()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-            rb.isKinematic = true;               // anchor the pad
-        }
-        else
-        {
-            rb.isKinematic = true;
-        }
+        // YENİ: EnsureKinematicRigidbody yerine burada ayarla
+        var rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;                                   // pad sabit
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative; // CCD
     }
 
     //--------------------------------------------------------------------
@@ -52,10 +40,7 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
     // OnTriggerEnter will still activate regardless of direction
     void OnTriggerEnter(Collider other)
     {
-        // If you want directional sensitivity for triggers too,
-        // you'd need a more complex solution (e.g., raycasting from player).
-        // For now, it will launch even from bottom if it's a trigger.
-        // If you primarily use collision, this is fine.
+        // Orijinal davranış: yön ayırt etmeden fırlat
         TryLaunch(other.attachedRigidbody);
     }
 
@@ -65,8 +50,6 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
 
         if (playerRb == null || !playerRb.CompareTag(playerTag)) return;
 
-        // Calculate the average normal of the contact points.
-        // This will tell us the direction the collision came from relative to the jump pad.
         Vector3 averageNormal = Vector3.zero;
         foreach (ContactPoint contact in collision.contacts)
         {
@@ -74,15 +57,11 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
         }
         averageNormal /= collision.contacts.Length;
 
-        // Check if the collision normal is pointing mostly upwards (relative to the jump pad's local up).
-        // This means the player landed on top.
-        // Adjust the 0.5f threshold if needed for sensitivity.
+        // İSTEDİĞİN GİBİ AYNI: < 0.5f (hiç dokunmadım)
         if (Vector3.Dot(averageNormal, transform.up) < 0.5f)
         {
             TryLaunch(playerRb);
         }
-        // If the dot product is not positive and above the threshold,
-        // it means the player hit from the side or below, so we do nothing.
     }
 
     private void TryLaunch(Rigidbody playerRb)
@@ -91,34 +70,27 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
 
         // 1) Tell the spring not to fight us
         Spring spring = playerRb.GetComponentInChildren<Spring>();
-        if (spring != null) spring.enableSuspensionForce = false;   // let it float
+        if (spring != null) spring.enableSuspensionForce = false;
 
         // 2) Clear downward velocity and boost
-        Vector3 vel = playerRb.linearVelocity;          // linearVelocity == velocity
+        Vector3 vel = playerRb.linearVelocity; // linearVelocity == velocity (Unity 6)
         if (vel.y < 0f) vel.y = 0f;
-        playerRb.linearVelocity = vel;                  // overwrite to be safe
-        playerRb.AddForce((useWorldUp ? Vector3.up : transform.up) * jumpForce,
-            forceMode);
+        playerRb.linearVelocity = vel;
+        playerRb.AddForce((useWorldUp ? Vector3.up : transform.up) * jumpForce, forceMode);
 
         // 3) Re-enable the suspension after a tiny delay
         if (spring != null)
             StartCoroutine(EnableSuspensionNextFixed(spring));
 
-        // 4) Play FX (optional) — önce yerelde çal
+        // 4) FX (lokal)
         if (jumpSfx != null)
-        {
             AudioSource.PlayClipAtPoint(jumpSfx, transform.position);
-        }
         if (jumpVfx != null)
-        {
-            Instantiate(jumpVfx, transform.position, Quaternion.identity); // Or pool it
-        }
+            Instantiate(jumpVfx, transform.position, Quaternion.identity);
 
-        // 4-b) FX’i diğer client’lara yayınla (sadece FX, fizik değil)
-        // Network kapalıysa sessizce atlar.
+        // 4-b) FX’i diğer client’lara yayınla (sadece FX)
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
-            // Pozisyonu gönder; asset referanslarını her client kendi komponentinden kullanır.
             RequestFxServerRpc(transform.position);
         }
     }
@@ -134,16 +106,12 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
     [ServerRpc(RequireOwnership = false)]
     private void RequestFxServerRpc(Vector3 worldPos, ServerRpcParams serverRpcParams = default)
     {
-        // Gönderen client’ı hariç tutarak yayınla (owner’da çift çalmasın)
         ulong senderId = serverRpcParams.Receive.SenderClientId;
 
-        // Hedef listesi: tüm client’lar - sender
         if (NetworkManager == null) return;
         var ids = NetworkManager.ConnectedClientsIds;
-        // Eğer tek başınaysa veya host tek client ise, gerek yok:
         if (ids == null || ids.Count <= 1) return;
 
-        // Target listesi oluştur
         var targets = new System.Collections.Generic.List<ulong>(ids.Count);
         for (int i = 0; i < ids.Count; i++)
         {
@@ -163,11 +131,10 @@ public class JumpPad : NetworkBehaviour   // ← MonoBehaviour → NetworkBehavi
     [ClientRpc]
     private void PlayFxClientRpc(Vector3 worldPos, ClientRpcParams clientRpcParams = default)
     {
-        // Tüm hedef client’larda SFX/VFX’i çal
         if (jumpSfx != null)
             AudioSource.PlayClipAtPoint(jumpSfx, worldPos);
 
         if (jumpVfx != null)
-            Instantiate(jumpVfx, worldPos, Quaternion.identity); // Pool önerilir
+            Instantiate(jumpVfx, worldPos, Quaternion.identity);
     }
 }

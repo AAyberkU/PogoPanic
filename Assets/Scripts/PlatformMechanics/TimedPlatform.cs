@@ -45,9 +45,16 @@ public class TimedPlatform : NetworkBehaviour
     private Coroutine _serverRoutine;
     private Coroutine _clientBlinkRoutine;
     private bool _isProcessingTriggered;
+    
+    private Rigidbody      rb;
 
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.isKinematic   = true;
+        rb.interpolation = RigidbodyInterpolation.None;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        
         if (platformColliders == null || platformColliders.Length == 0)
             platformColliders = GetComponentsInChildren<Collider>(includeInactive: true);
         if (platformRenderers == null || platformRenderers.Length == 0)
