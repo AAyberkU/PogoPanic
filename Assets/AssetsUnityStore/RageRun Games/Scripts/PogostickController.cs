@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic; // ★ NEW
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -36,6 +37,10 @@ namespace RageRunGames.PogostickController
         [SerializeField] private Transform[] otherTransformsToMove;
         [SerializeField] private CapsuleCollider characterCollider;
 
+        // ★ NEW: Pogo’nun collider’ını inspector’dan atamak için
+        [Header("Extra Colliders")]
+        [SerializeField] private Collider pogoCollider;
+
         [Header("SFX & Effects")] 
         [SerializeField] private PogoStickBounceEffectHandler[] pogoStickBounceEffectHandler;
         [SerializeField] private AudioClip jumpSound;
@@ -55,7 +60,6 @@ namespace RageRunGames.PogostickController
 
         private float _suspLastSentY;
 
-
         [Header("Air-Rotation")]
         public bool  alignYawInAir = true;
         public float airYawLerpSpeed = 6f;
@@ -63,6 +67,29 @@ namespace RageRunGames.PogostickController
         [Header("Hit Effect")]
         [SerializeField] private ParticleSystem hitEffect;
         private Coroutine hitEffectCoroutine;
+
+        // ★ NEW (Inspector): Upright davranışı
+        [Header("Upright (R) Settings")]
+        [SerializeField] private float uprightCooldown = 1f;            // R spam engeli (default 1s)
+        [SerializeField] private float uprightDurationGrounded = 0.75f;  // yerdeyken slerp
+        [SerializeField] private float uprightDurationAir = 0.25f;       // havadayken slerp
+        [SerializeField] private bool  uprightYawToCamera = true;        // bitişte kameraya hizala mı
+
+        // ★ NEW (Inspector): Unstuck pipeline
+        [Header("Unstuck Settings")]
+        [SerializeField] private bool useDepenetration = true;
+        [SerializeField] private int  maxDepenetrationIterations = 3;
+        [SerializeField] private float maxTotalDepenetrationDistance = 0.6f;
+        [SerializeField] private bool useUpwardScan = true;
+        [SerializeField] private int  upwardScanSteps = 6;
+        [SerializeField] private float upwardScanStepHeight = 0.2f;
+        [SerializeField] private bool useLastSafeRewind = true;
+        [SerializeField] private float rewindSeconds = 1.0f;
+        [SerializeField] private float safePoseRecordInterval = 0.1f;
+        [SerializeField] private LayerMask solidLayers = ~0; // tüm katılar (Trigger’lar ignore edilir)
+
+        private float _lastUprightTime = -999f; // cooldown takibi
+        private Tween _uprightTween;            // aktif tween referansı
 
         private float jetpackFuel;
         private bool  jetpackActive;
@@ -74,7 +101,6 @@ namespace RageRunGames.PogostickController
         // Jetpack state'i networkte tutmak için
         private NetworkVariable<bool> nvJetpackActive = new NetworkVariable<bool>(
             false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-
 
         [SerializeField] private float holdJumpDuration = 1f;
         private float groundHoldTimer;          
@@ -122,6 +148,16 @@ namespace RageRunGames.PogostickController
         private Quaternion _groundedTargetRot;
         private bool _hasGroundedTarget;
         private bool _suppressGroundedRotation;
+
+        // override sırasında geçici constraint saklama
+        private RigidbodyConstraints _prevConstraints;
+
+        // ★ NEW: Last safe pose buffer
+        private struct SafePose { public Vector3 pos; public Quaternion rot; public float t; }
+        private const int SafePoseCapacity = 30; // ~3 sn @0.1s
+        private readonly SafePose[] _safePoses = new SafePose[SafePoseCapacity];
+        private int _safePoseIndex = 0;
+        private float _safePoseTimer = 0f;
         #endregion
 
         #region Properties
@@ -203,7 +239,6 @@ namespace RageRunGames.PogostickController
             nvSuspensionPosY.OnValueChanged += (oldV, newV) =>
             {
                 if (IsOwner || suspensionTarget == null) return;
-                // anlık set yerine hafif yumuşatarak uygularız (Update'te de akacak)
                 var lp = suspensionTarget.localPosition;
                 lp.y = newV;
                 suspensionTarget.localPosition = lp;
@@ -334,7 +369,8 @@ namespace RageRunGames.PogostickController
             {
                 if (Mathf.Abs(horizontalInput) < 0.01f 
                     && Mathf.Abs(verticalInput)   < 0.01f
-                    && !IsPerformingStunt)
+                    && !IsPerformingStunt
+                    && !isAutoBalancing) // ★ override sırasında kameraya hizalama yapma
                 {
                     AlignYawToCamera();
                 }
@@ -350,6 +386,9 @@ namespace RageRunGames.PogostickController
                 );
                 rb.MoveRotation(next);
             }
+
+            // ★ NEW: Last safe pose kaydı
+            SafePoseRecordingTick();
         }
 
         void OnCollisionEnter(Collision c)
@@ -863,7 +902,7 @@ namespace RageRunGames.PogostickController
 
         private void HandleTorqueRotation()
         {
-            if (!isGrounded && settings.useStunts)
+            if (!isGrounded && settings.useStunts && !isAutoBalancing) // ★ override sırasında stunt torque yok
             {
                 ApplyAirTorque();
                 CacheCurrentRotation();
@@ -895,7 +934,7 @@ namespace RageRunGames.PogostickController
      
         private void AlignYawToCamera()
         {
-            if (!alignYawInAir || isGrounded || IsPerformingStunt) return;
+            if (!alignYawInAir || isGrounded || IsPerformingStunt || isAutoBalancing) return; // ★ NEW
 
             float targetYaw = Camera.main.transform.eulerAngles.y;
 
@@ -966,38 +1005,81 @@ namespace RageRunGames.PogostickController
 
         private void HandleAutoBalanceInput()
         {
-            if (Input.GetKeyDown(KeyCode.R) && allowedToJumpBasedOnCurrentAngle && !isAutoBalancing)
+            // ★★ CHANGED: R her koşulda çalışır + cooldown
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                StartAutoBalance();
+                TryForceUpright();
             }
+        }
+
+        private void TryForceUpright()
+        {
+            if (Time.time - _lastUprightTime < Mathf.Max(0f, uprightCooldown))
+                return;
+
+            ForceUpright();
+            _lastUprightTime = Time.time;
+        }
+
+        private void ForceUpright()
+        {
+            // aktif tween varsa iptal
+            if (_uprightTween != null && _uprightTween.IsActive())
+                _uprightTween.Kill();
+
+            isAutoBalancing = true;
+            timer = autobalancingTimer;
+
+            // grounded slerp’i bastır
+            _suppressGroundedRotation = true;
+
+            // açısal hızı kes (linearVelocity'yi KESMİYORUZ)
+            rb.angularVelocity = Vector3.zero;
+
+            // geçici constraint gevşet (rotasyona engel olmasın), sonra geri yüklenecek
+            _prevConstraints = rb.constraints;
+            rb.freezeRotation = false;
+            rb.constraints = RigidbodyConstraints.None;
+
+            // hedef 1: pitch=0, roll=0, mevcut yaw korunur (görsel olarak dikleşme)
+            Quaternion firstTarget = Quaternion.Euler(0f, rb.rotation.eulerAngles.y, 0f);
+
+            float dur = isGrounded ? Mathf.Max(0.01f, uprightDurationGrounded)
+                                   : Mathf.Max(0.01f, uprightDurationAir);
+
+            _uprightTween = transform
+                .DORotateQuaternion(firstTarget, dur)
+                .SetUpdate(UpdateType.Fixed)
+                .OnComplete(() =>
+                {
+                    // bittiğinde isteğe göre yaw'ı kameraya hizala
+                    float finalYaw = uprightYawToCamera ? Camera.main.transform.eulerAngles.y
+                                                        : transform.rotation.eulerAngles.y;
+
+                    xRotation = 0f;
+                    zRotation = 0f;
+                    yRotation = finalYaw;
+
+                    // hedef rotasyonu cache’le
+                    _groundedTargetRot = Quaternion.Euler(xRotation, yRotation, zRotation);
+                    _hasGroundedTarget = true;
+
+                    // ★★ NEW: Kurtarma pipeline (3 aşama)
+                    UnstuckPipeline();
+
+                    // constraint’leri geri yükle
+                    rb.constraints = _prevConstraints;
+
+                    // override bitti
+                    _suppressGroundedRotation = false;
+                    isAutoBalancing = false;
+                });
         }
 
         private void StartAutoBalance()
         {
-            isAutoBalancing = true;
-            timer = autobalancingTimer;
-
-            // ★ NEW: tween boyunca fizik rotasyonunu bastır
-            _suppressGroundedRotation = true;
-            
-            transform
-                .DORotateQuaternion(
-                    Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f), 
-                    0.75f
-                )
-                .SetUpdate(UpdateType.Fixed) // ★ NEW: Update yerine Fixed
-                .OnComplete(() =>
-                {
-                    xRotation = 0f;
-                    zRotation = 0f;
-                    yRotation = Camera.main.transform.eulerAngles.y;
-                    isAutoBalancing = false;
-
-                    // tween biter bitmez cache’i güncelle, bastırmayı kaldır
-                    _groundedTargetRot = Quaternion.Euler(xRotation, yRotation, zRotation);
-                    _hasGroundedTarget = true;
-                    _suppressGroundedRotation = false;
-                });
+            // (legacy) artık kullanılmıyor, TryForceUpright kullanılıyor.
+            ForceUpright();
         }
 
         private void UpdateAutoBalanceTimer()
@@ -1031,7 +1113,7 @@ namespace RageRunGames.PogostickController
         }
         #endregion
 
-        #region Utility Methods
+        #region Utility Methods (RPC & Effects)
         [ServerRpc(RequireOwnership = true)]
         private void BounceEffectsServerRpc(int layer, Color color)
         {
@@ -1083,7 +1165,9 @@ namespace RageRunGames.PogostickController
             hitEffect.Stop();
             hitEffectCoroutine = null;
         }
+        #endregion
 
+        #region Jetpack Methods
         private void HandleJetpackPhysics()
         {
             var jp = settings.jetpackSettings;
@@ -1114,8 +1198,9 @@ namespace RageRunGames.PogostickController
             // Owner local uygular
             ApplyJetpackFxSfx(jetpackActive);
         }
+        #endregion
 
-
+        #region Reset & Stunt Lock
         public void HandleReset()
         {
             HoldingJumpKey = false;
@@ -1149,13 +1234,306 @@ namespace RageRunGames.PogostickController
                 rb.constraints = RigidbodyConstraints.FreezeRotationZ;
             }
         }
+        #endregion
 
+        #region Public Getters
         public float GetCurrentFuel()    => jetpackFuel;
         public float GetNormalizedFuel() => jetpackFuel / settings.jetpackSettings.maxFuel;
         
         public float GetNormalizedAccumulatedJump()
         {
             return currentAccumulatedForce / settings.maxAccumulatedForce;
+        }
+        #endregion
+
+        #region Unstuck Pipeline (Depenetration → UpwardScan → LastSafe)
+        private void UnstuckPipeline()
+        {
+            // Hızları kesmeden: sadece açısalı kestik; linearVelocity korunuyor.
+
+            // 1) Depenetration
+            if (useDepenetration && TryDepenetrate())
+                return;
+
+            // 2) Upward Scan
+            if (useUpwardScan && TryUpwardScan())
+                return;
+
+            // 3) Last Safe Rewind
+            if (useLastSafeRewind)
+                TryRewindToLastSafe();
+        }
+
+        // ★★ NEW: İki collider içinden EN AZ biri sıkışıksa true
+        private bool AnyColliderOverlapping(Vector3 offset)
+        {
+            bool stuck = false;
+
+            // Character (Capsule) için
+            if (characterCollider != null)
+            {
+                Vector3 p0, p1; float r;
+                GetCapsuleWorldPoints(characterCollider, out p0, out p1, out r);
+                if (IsCapsuleOverlapping(p0 + offset, p1 + offset, r))
+                    stuck = true;
+            }
+
+            // Pogo collider (genel tip) için
+            if (pogoCollider != null)
+            {
+                if (IsGenericColliderOverlapping(pogoCollider, offset))
+                    stuck = true;
+            }
+
+            return stuck;
+        }
+
+        private bool TryDepenetrate()
+        {
+            // Hangi collider’lar devrede?
+            List<Collider> testColliders = new List<Collider>(2);
+            if (characterCollider != null) testColliders.Add(characterCollider);
+            if (pogoCollider      != null) testColliders.Add(pogoCollider);
+
+            if (testColliders.Count == 0) return false;
+
+            // Hızlı çıkış: zaten temiz mi?
+            if (!AnyColliderOverlapping(Vector3.zero)) return true;
+
+            Vector3 totalOffset = Vector3.zero;
+
+            for (int iter = 0; iter < Mathf.Max(1, maxDepenetrationIterations); iter++)
+            {
+                Vector3 accum = Vector3.zero;
+
+                foreach (var col in testColliders)
+                {
+                    // Aday çakışanları topla
+                    var candidates = GetOverlapCandidates(col, Vector3.zero);
+
+                    foreach (var other in candidates)
+                    {
+                        if (other == null) continue;
+                        if (other.attachedRigidbody == rb) continue; // kendi RB’ni sayma
+
+                        Vector3 dir; float dist;
+
+                        // Kendi collider’ımızı (col) "offset" olmadan test ediyoruz (rb.position zaten gerçek)
+                        if (Physics.ComputePenetration(
+                                col, col.transform.position, col.transform.rotation,
+                                other, other.transform.position, other.transform.rotation,
+                                out dir, out dist))
+                        {
+                            accum += dir * dist; // MTV topla
+                        }
+                    }
+                }
+
+                if (accum.sqrMagnitude < 1e-8f)
+                    break;
+
+                // Toplam hareket clamp
+                Vector3 proposed = totalOffset + accum;
+                if (proposed.magnitude > maxTotalDepenetrationDistance)
+                {
+                    accum = proposed.normalized * (maxTotalDepenetrationDistance - totalOffset.magnitude);
+                }
+
+                rb.position += accum;
+                totalOffset += accum;
+
+                // Yeniden kontrol: tertemiz mi?
+                if (!AnyColliderOverlapping(Vector3.zero))
+                    return true;
+            }
+
+            return !AnyColliderOverlapping(Vector3.zero);
+        }
+
+        private bool TryUpwardScan()
+        {
+            // Zaten temizse gerek yok
+            if (!AnyColliderOverlapping(Vector3.zero)) return true;
+
+            Vector3 basePos = rb.position;
+            float step  = Mathf.Max(0.01f, upwardScanStepHeight);
+            int   steps = Mathf.Max(1,     upwardScanSteps);
+
+            for (int i = 1; i <= steps; i++)
+            {
+                Vector3 candidate = basePos + Vector3.up * (step * i);
+                Vector3 offset    = candidate - rb.position;
+
+                if (!AnyColliderOverlapping(offset))
+                {
+                    rb.position = candidate;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void TryRewindToLastSafe()
+        {
+            // hedef: rewindSeconds kadar geçmişteki ilk güvenli poza dön
+            float targetT = Time.time - Mathf.Max(0.05f, rewindSeconds);
+
+            // en yakın (ama targetT'den büyük olmayan) pozu bul
+            SafePose best = default;
+            bool found = false;
+
+            for (int i = 0; i < SafePoseCapacity; i++)
+            {
+                var sp = _safePoses[i];
+                if (sp.t <= 0f) continue;
+                if (sp.t >= targetT)
+                {
+                    best = sp;
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                // buffer boş olabilir; en eski geçerli pozu bul
+                float latest = -1f;
+                for (int i = 0; i < SafePoseCapacity; i++)
+                {
+                    var sp = _safePoses[i];
+                    if (sp.t > latest)
+                    {
+                        latest = sp.t;
+                        best = sp;
+                        found = true;
+                    }
+                }
+            }
+
+            if (found)
+            {
+                rb.position        = best.pos + Vector3.up * 0.03f; // küçük skin
+                rb.rotation        = best.rot;
+                rb.linearVelocity  = rb.linearVelocity;              // lineari KORU (istersen clamp’la)
+                rb.angularVelocity = Vector3.zero;                   // yalnızca açısal sıfırla
+            }
+        }
+
+        private void SafePoseRecordingTick()
+        {
+            _safePoseTimer += Time.fixedDeltaTime;
+            if (_safePoseTimer < Mathf.Max(0.02f, safePoseRecordInterval)) return;
+            _safePoseTimer = 0f;
+
+            // KAYIT KRİTERİ: Her iki collider da temiz olmalı
+            if (!AnyColliderOverlapping(Vector3.zero))
+            {
+                _safePoses[_safePoseIndex] = new SafePose
+                {
+                    pos = rb.position,
+                    rot = rb.rotation,
+                    t = Time.time
+                };
+                _safePoseIndex = (_safePoseIndex + 1) % SafePoseCapacity;
+            }
+        }
+
+        // --- Overlap yardımcıları ---
+
+        // Capsule özel overlap (mevcut fonksiyonun offset’li hali için aşırı yükleme kullanalım)
+        private bool IsCapsuleOverlapping(Vector3 p0, Vector3 p1, float radius)
+        {
+            var cols = Physics.OverlapCapsule(p0, p1, radius, solidLayers, QueryTriggerInteraction.Ignore);
+            foreach (var c in cols)
+            {
+                if (c == null) continue;
+                if (c.attachedRigidbody == rb) continue; // kendini sayma
+                return true;
+            }
+            return false;
+        }
+
+        // Generic collider için: OverlapSphere ile adayları al, sonra ComputePenetration ile kesin kontrol
+        private bool IsGenericColliderOverlapping(Collider col, Vector3 offset)
+        {
+            // Kaba yarıçap olarak bounds extents magnitute kullanıyoruz
+            Vector3 center = col.bounds.center + offset;
+            float radius = col.bounds.extents.magnitude;
+
+            var candidates = Physics.OverlapSphere(center, radius, solidLayers, QueryTriggerInteraction.Ignore);
+            foreach (var other in candidates)
+            {
+                if (other == null) continue;
+                if (other.attachedRigidbody == rb) continue;
+
+                Vector3 dir; float dist;
+                if (Physics.ComputePenetration(
+                        col, col.transform.position + offset, col.transform.rotation,
+                        other, other.transform.position, other.transform.rotation,
+                        out dir, out dist))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Depenetration sırasında adayları toplamak için ortak getter
+        private Collider[] GetOverlapCandidates(Collider col, Vector3 offset)
+        {
+            if (col is CapsuleCollider cc)
+            {
+                Vector3 p0, p1; float r;
+                GetCapsuleWorldPoints(cc, out p0, out p1, out r);
+                p0 += offset; p1 += offset;
+                return Physics.OverlapCapsule(p0, p1, r, solidLayers, QueryTriggerInteraction.Ignore);
+            }
+            else
+            {
+                Vector3 center = col.bounds.center + offset;
+                float radius = col.bounds.extents.magnitude;
+                return Physics.OverlapSphere(center, radius, solidLayers, QueryTriggerInteraction.Ignore);
+            }
+        }
+
+        private void GetCapsuleWorldPoints(CapsuleCollider col, out Vector3 p0, out Vector3 p1, out float radius)
+        {
+            // world center
+            Vector3 center = col.transform.TransformPoint(col.center);
+
+            // scale’lı yarıçap & yükseklik
+            Vector3 lossy = col.transform.lossyScale;
+            float rScale = Mathf.Max(Mathf.Abs(lossy.x), Mathf.Abs(lossy.z));
+            float hScale = Mathf.Abs(lossy.y);
+
+            radius = col.radius * rScale;
+            float height = Mathf.Max(col.height * hScale, radius * 2f);
+            float half = (height * 0.5f) - radius;
+
+            Vector3 up = col.transform.up;
+
+            switch (col.direction)
+            {
+                case 0: // X
+                    up = col.transform.right;
+                    rScale = Mathf.Max(Mathf.Abs(lossy.y), Mathf.Abs(lossy.z));
+                    radius = col.radius * rScale;
+                    height = Mathf.Max(col.height * Mathf.Abs(lossy.x), radius * 2f);
+                    half = (height * 0.5f) - radius;
+                    break;
+                case 1: // Y (default)
+                    break;
+                case 2: // Z
+                    up = col.transform.forward;
+                    rScale = Mathf.Max(Mathf.Abs(lossy.x), Mathf.Abs(lossy.y));
+                    radius = col.radius * rScale;
+                    height = Mathf.Max(col.height * Mathf.Abs(lossy.z), radius * 2f);
+                    half = (height * 0.5f) - radius;
+                    break;
+            }
+
+            p0 = center + up * half;
+            p1 = center - up * half;
         }
         #endregion
     }

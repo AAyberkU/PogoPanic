@@ -87,7 +87,7 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 1.08
   m_Direction: 1
-  m_Center: {x: 0, y: 1.06, z: -0.11}
+  m_Center: {x: 0, y: 0.92, z: -0.11}
 --- !u!1 &101908523889212098
 GameObject:
   m_ObjectHideFlags: 0
@@ -22655,6 +22655,7 @@ MonoBehaviour:
   - {fileID: 7385023414681600303}
   - {fileID: 114692045564019475}
   characterCollider: {fileID: 5715313431598993462}
+  pogoCollider: {fileID: 1414476843837835871}
   pogoStickBounceEffectHandler:
   - layer: 4
     clip: {fileID: 8300000, guid: 8ec1c1e48eeb9ff49b95a7c4e0b3368c, type: 3}
@@ -22673,6 +22674,22 @@ MonoBehaviour:
   alignYawInAir: 0
   airYawLerpSpeed: 5
   hitEffect: {fileID: 6254237171089476157}
+  uprightCooldown: 1
+  uprightDurationGrounded: 0.75
+  uprightDurationAir: 0.75
+  uprightYawToCamera: 0
+  useDepenetration: 1
+  maxDepenetrationIterations: 3
+  maxTotalDepenetrationDistance: 0.9
+  useUpwardScan: 1
+  upwardScanSteps: 6
+  upwardScanStepHeight: 0.2
+  useLastSafeRewind: 1
+  rewindSeconds: 3
+  safePoseRecordInterval: 0.1
+  solidLayers:
+    serializedVersion: 2
+    m_Bits: 471
   holdJumpDuration: 1
 --- !u!114 &3416487060357688282
 MonoBehaviour:
