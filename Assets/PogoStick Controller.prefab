@@ -6082,7 +6082,6 @@ GameObject:
   - component: {fileID: 645245656503386544}
   - component: {fileID: 2509134505424347458}
   - component: {fileID: 4889822582474709105}
-  - component: {fileID: 895131977274318178}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -6173,24 +6172,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &895131977274318178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2251181689403777079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1adad91e422dbbe45874231ad85b887b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameData: {fileID: 7460188998160155622}
-  nameText: {fileID: 4618727871075909013}
-  followTarget: {fileID: 8324793457929728174}
-  worldOffset: {x: 0, y: 0, z: 0}
-  maxVisibleDistance: 35
-  hideForLocalPlayer: 1
 --- !u!1 &2614664890102166089
 GameObject:
   m_ObjectHideFlags: 0
@@ -22743,7 +22724,7 @@ GameObject:
   - component: {fileID: 5752572067586739283}
   - component: {fileID: 6434982529469215714}
   - component: {fileID: 8920752607856557989}
-  - component: {fileID: 7460188998160155622}
+  - component: {fileID: 5813799872959648609}
   - component: {fileID: 4455563486825158590}
   - component: {fileID: 5567469600717226949}
   m_Layer: 3
@@ -23159,7 +23140,7 @@ MonoBehaviour:
   customStartPoint: {fileID: 0}
   smokeEffectPrefab: {fileID: 1712864536475226642}
   preTeleportDelay: 0.1
---- !u!114 &7460188998160155622
+--- !u!114 &5813799872959648609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23168,11 +23149,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5842934194961060424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c61ee860ce9a08c468842d3af571e434, type: 3}
+  m_Script: {fileID: 11500000, guid: da33c252cbde3e042afef6b453a1ba42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  worldCanvas: {fileID: 645245656503386544}
+  nameText: {fileID: 4618727871075909013}
+  headAnchor: {fileID: 8324793457929728174}
+  mainCamOverride: {fileID: 0}
+  worldOffset: {x: 0, y: 0, z: 0}
+  faceCamera: 1
+  hideForLocalPlayer: 1
   fallbackName: Player
+  enableDistanceFade: 0
+  visibleDistance: 30
+  minScale: 0.75
+  maxScale: 1.25
 --- !u!114 &4455563486825158590
 MonoBehaviour:
   m_ObjectHideFlags: 0
