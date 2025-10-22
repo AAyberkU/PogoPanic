@@ -23161,7 +23161,7 @@ MonoBehaviour:
   faceCamera: 1
   hideForLocalPlayer: 1
   fallbackName: Player
-  enableDistanceFade: 0
+  enableDistanceFade: 1
   visibleDistance: 30
   minScale: 0.75
   maxScale: 1.25
