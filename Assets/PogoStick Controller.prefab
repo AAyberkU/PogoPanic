@@ -6190,7 +6190,7 @@ MonoBehaviour:
   followTarget: {fileID: 8324793457929728174}
   worldOffset: {x: 0, y: 0, z: 0}
   maxVisibleDistance: 35
-  hideForLocalPlayer: 0
+  hideForLocalPlayer: 1
 --- !u!1 &2614664890102166089
 GameObject:
   m_ObjectHideFlags: 0
