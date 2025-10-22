@@ -23163,8 +23163,8 @@ MonoBehaviour:
   fallbackName: Player
   enableDistanceFade: 1
   visibleDistance: 30
-  minScale: 0.75
-  maxScale: 1.25
+  minScale: 0
+  maxScale: 1
 --- !u!114 &4455563486825158590
 MonoBehaviour:
   m_ObjectHideFlags: 0
