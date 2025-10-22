@@ -8,10 +8,10 @@ using Steamworks;          // Steamworks.NET
 public class NameTag : NetworkBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private Canvas worldCanvas;                 
-    [SerializeField] private TextMeshProUGUI nameText;           
-    [SerializeField] private Transform headAnchor;               
-    [SerializeField] private Camera mainCamOverride;             
+    [SerializeField] private Canvas worldCanvas;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private Transform headAnchor;
+    [SerializeField] private Camera mainCamOverride;
 
     [Header("Behaviour")]
     [SerializeField] private Vector3 worldOffset = new Vector3(0f, 0.4f, 0f);
@@ -34,6 +34,7 @@ public class NameTag : NetworkBehaviour
     private Transform _camT;
     private Transform _targetT;
     private bool _initialized;
+    private float _nextCamSearchTime; // lazy kamera bulma için
 
     // ──────────────────────────────────────────────────────────────
     private void Awake()
@@ -47,24 +48,25 @@ public class NameTag : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        // Kamera
-        _camT = mainCamOverride ? mainCamOverride.transform : (Camera.main ? Camera.main.transform : null);
+        // İlk deneme: o anda varsa al
+        var cam = FindBestCamera();
+        _camT = cam ? cam.transform : null;
 
-        // Local gizleme
+        // Local gizleme sadece owner için
         if (IsOwner && hideForLocalPlayer && worldCanvas)
             worldCanvas.enabled = false;
 
         // UI güncelleme aboneliği
         _playerName.OnValueChanged += OnNameChanged;
 
-        // Sadece owner kendi ismini yazar → tüm client'lara yayılır
+        // Sadece owner bir kere set eder → tüm peer’lara yayılır
         if (IsOwner)
         {
             string steamName = TryGetSteamPersonaName();
             _playerName.Value = !string.IsNullOrWhiteSpace(steamName) ? steamName : fallbackName;
         }
 
-        // Spawn anında da güncelle
+        // Spawn anında UI senkronla
         OnNameChanged(default, _playerName.Value);
         _initialized = true;
     }
@@ -78,18 +80,22 @@ public class NameTag : NetworkBehaviour
     private void LateUpdate()
     {
         if (!_initialized || !worldCanvas) return;
+
+        // Kamera yoksa periyodik tekrar dene (Cinemachine/scene transition sonrası)
+        EnsureCamera();
+
         if (IsOwner && hideForLocalPlayer && !worldCanvas.enabled) return;
 
         // Pozisyon + offset
         var basePos = _targetT ? _targetT.position : transform.position;
         worldCanvas.transform.position = basePos + worldOffset;
 
-        // Kameraya bak
+        // Kameraya bak (billboard)
         if (faceCamera && _camT)
         {
             var dir = worldCanvas.transform.position - _camT.position;
             if (dir.sqrMagnitude > 0.0001f)
-                worldCanvas.transform.rotation = Quaternion.LookRotation(dir);
+                worldCanvas.transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
         }
 
         // Mesafe bazlı görünürlük/ölçek
@@ -110,6 +116,43 @@ public class NameTag : NetworkBehaviour
         if (nameText)
             nameText.text = newName.IsEmpty ? fallbackName : newName.ToString();
     }
+
+    // ──────────────────────────────────────────────────────────────
+    // Kamera yardımcıları
+
+    private void EnsureCamera()
+    {
+        if (_camT) return;
+
+        // Performansı korumak için yarım saniyede bir ara
+        if (Time.unscaledTime < _nextCamSearchTime) return;
+
+        var cam = FindBestCamera();
+        if (cam) _camT = cam.transform;
+
+        _nextCamSearchTime = Time.unscaledTime + 0.5f;
+    }
+
+    private Camera FindBestCamera()
+    {
+        if (mainCamOverride) return mainCamOverride;
+
+        // Önce Main Camera tag’li olan
+        var cam = Camera.main;
+        if (cam && cam.isActiveAndEnabled) return cam;
+
+        // Değilse aktif herhangi bir kamera
+        var all = Camera.allCameras;
+        for (int i = 0; i < all.Length; i++)
+        {
+            if (all[i] && all[i].isActiveAndEnabled) return all[i];
+        }
+
+        return null;
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Steam adı
 
     private string TryGetSteamPersonaName()
     {
