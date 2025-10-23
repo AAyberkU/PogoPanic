@@ -144,11 +144,6 @@ namespace RageRunGames.PogostickController
         private RotatorPlatform currentPlatform;
         private const float detachAirGap = 0.05f;
 
-        // ★★★ NEW: Fixed için hedef rotasyon cache + bastırma bayrağı
-        private Quaternion _groundedTargetRot;
-        private bool _hasGroundedTarget;
-        private bool _suppressGroundedRotation;
-
         // override sırasında geçici constraint saklama
         private RigidbodyConstraints _prevConstraints;
 
@@ -376,18 +371,9 @@ namespace RageRunGames.PogostickController
                 }
             }
 
-            // ★★★ NEW: Yerdeyken hedef rotasyona Fixed’te yaklaş ve uygula
-            if (isGrounded && _hasGroundedTarget && !_suppressGroundedRotation)
-            {
-                var next = Quaternion.Slerp(
-                    rb.rotation,
-                    _groundedTargetRot,
-                    settings.rotationSpeed * Time.fixedDeltaTime
-                );
-                rb.MoveRotation(next);
-            }
+            // ★ ESKİ mimari: burada grounded rotasyon uygulanmaz (Update’te uygulanır)
 
-            // ★ NEW: Last safe pose kaydı
+            // Last safe pose kaydı
             SafePoseRecordingTick();
         }
 
@@ -862,13 +848,13 @@ namespace RageRunGames.PogostickController
             else
             {
                 playEffect = false;
-                _hasGroundedTarget = false; // ★ NEW: havada hedefi iptal et
+                // ESKİ mimari: hedef-rot cache/iptal yok
             }
         }
 
         private void HandleGroundedRotation()
         {
-            // ★ Update bağlamı: SADECE hedef açıyı hesapla ve cache et
+            // ESKİ: hedef açıyı hesapla ve BU KAREDE uygula (Update bağlamında)
             xRotation = Mathf.Lerp(
                 xRotation, 
                 xRotation + (verticalInput * settings.pitchSpeed),
@@ -895,9 +881,12 @@ namespace RageRunGames.PogostickController
             
             targetRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
 
-            // ★★ ÖNEMLİ: Update’te fizik çağrısı YOK. Sadece hedefi cache et.
-            _groundedTargetRot = targetRotation;
-            _hasGroundedTarget = true;
+            // KRİTİK: eski mimari — Update’te fizik rotasyonu uygula
+            rb.MoveRotation(Quaternion.Slerp(
+                rb.rotation, 
+                targetRotation,
+                Time.fixedDeltaTime * settings.rotationSpeed
+            ));
         }
 
         private void HandleTorqueRotation()
@@ -1030,12 +1019,6 @@ namespace RageRunGames.PogostickController
             isAutoBalancing = true;
             timer = autobalancingTimer;
 
-            // grounded slerp’i bastır
-            _suppressGroundedRotation = true;
-
-            // açısal hızı kes (linearVelocity'yi KESMİYORUZ)
-            rb.angularVelocity = Vector3.zero;
-
             // geçici constraint gevşet (rotasyona engel olmasın), sonra geri yüklenecek
             _prevConstraints = rb.constraints;
             rb.freezeRotation = false;
@@ -1049,7 +1032,7 @@ namespace RageRunGames.PogostickController
 
             _uprightTween = transform
                 .DORotateQuaternion(firstTarget, dur)
-                .SetUpdate(UpdateType.Fixed)
+                // ESKİ: SetUpdate(UpdateType.Fixed) YOK
                 .OnComplete(() =>
                 {
                     // bittiğinde isteğe göre yaw'ı kameraya hizala
@@ -1060,18 +1043,14 @@ namespace RageRunGames.PogostickController
                     zRotation = 0f;
                     yRotation = finalYaw;
 
-                    // hedef rotasyonu cache’le
-                    _groundedTargetRot = Quaternion.Euler(xRotation, yRotation, zRotation);
-                    _hasGroundedTarget = true;
+                    // (ESKİ) hedef cache güncelleme/bastırma yok
 
-                    // ★★ NEW: Kurtarma pipeline (3 aşama)
+                    // ★★ NEW (kalsın): Kurtarma pipeline (3 aşama)
                     UnstuckPipeline();
 
                     // constraint’leri geri yükle
                     rb.constraints = _prevConstraints;
 
-                    // override bitti
-                    _suppressGroundedRotation = false;
                     isAutoBalancing = false;
                 });
         }
