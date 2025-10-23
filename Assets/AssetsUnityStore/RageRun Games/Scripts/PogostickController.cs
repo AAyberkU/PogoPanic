@@ -153,6 +153,17 @@ namespace RageRunGames.PogostickController
         private readonly SafePose[] _safePoses = new SafePose[SafePoseCapacity];
         private int _safePoseIndex = 0;
         private float _safePoseTimer = 0f;
+
+        // ★ NEW: Landing transition takibi
+        private bool wasGrounded = false;
+
+        // ★ NEW: Proxy relax görseli (yalnızca !IsOwner)
+        private const float ProxyRelaxDuration = 0.25f;
+        private bool  _proxyRelaxActive = false;
+        private float _proxyRelaxElapsed = 0f;
+        private float _proxyPrevForce = 0f;
+        private float  _relaxStartYChar;
+        private float[] _relaxStartYOthers;
         #endregion
 
         #region Properties
@@ -199,6 +210,9 @@ namespace RageRunGames.PogostickController
 
             jetpackFuel = settings.jetpackSettings.maxFuel;   // start full
             if (suspensionTarget) _suspLastSentY = suspensionTarget.localPosition.y;
+
+            // ★ NEW: wasGrounded başlangıcı
+            wasGrounded = spring != null && spring.isGrounded;
         }
 
         public override void OnNetworkSpawn() // ★ NEW
@@ -228,7 +242,10 @@ namespace RageRunGames.PogostickController
 
             // Proxy spawn olduğunda başlangıç durumu uygula
             if (!IsOwner)
+            {
                 ApplyJetpackFxSfx(nvJetpackActive.Value);
+                _proxyPrevForce = nvAccumulatedForce.Value; // ★ NEW
+            }
 
             // Suspension posY değişince proxy'de uygula
             nvSuspensionPosY.OnValueChanged += (oldV, newV) =>
@@ -371,8 +388,6 @@ namespace RageRunGames.PogostickController
                 }
             }
 
-            // ★ ESKİ mimari: burada grounded rotasyon uygulanmaz (Update’te uygulanır)
-
             // Last safe pose kaydı
             SafePoseRecordingTick();
         }
@@ -424,7 +439,6 @@ namespace RageRunGames.PogostickController
         {
             spring = GetComponentInChildren<Spring>();
             rb = GetComponent<Rigidbody>();
-            // Cursor lock burada değil; owner bilgisi Awake’te hazır değil.
         }
 
         private void InitializeSettings()
@@ -445,6 +459,9 @@ namespace RageRunGames.PogostickController
                 initialYPositions[i] = otherTransformsToMove[i].localPosition.y;
 
             initialPlayerCharacterTransformPosY = characterModelTransform.GetChild(0).localPosition.y;
+
+            // ★ NEW: relax başlangıç cache dizisi
+            _relaxStartYOthers = new float[otherTransformsToMove.Length];
         }
         #endregion
 
@@ -492,14 +509,39 @@ namespace RageRunGames.PogostickController
 
         private void UpdateGroundedState()
         {
+            // Landing effect tetikleme
             if (!isGrounded && spring.isGrounded)
             {
                 PlayBounceEffects();
             }
 
+            // Geçiş tespiti için önceki değeri sakla
+            wasGrounded = isGrounded;
+
             isGrounded = spring.isGrounded;
             UpdateCenterOfMass();
             UpdateLinearDamping();
+
+            // ★ NEW: Havadayken charge edip basılı TUTARAK yere değdiysen → o anda zıpla
+            if (!wasGrounded && isGrounded)
+            {
+                if (HoldingJumpKey && currentAccumulatedForce > 0f)
+                {
+                    // zıplama FixedUpdate'te gerçekleşsin diye bayrakları ayarla
+                    spring.enableSuspensionForce = true;
+                    isJumpKeyPressed = true;
+                    HoldingJumpKey = false;
+                    groundHoldTimer = 0f;
+                }
+                else
+                {
+                    // Basılı değilse landing'de biriken varsa sıfırla (görsel/logic tutarlılık)
+                    if (currentAccumulatedForce > 0f)
+                    {
+                        CancelCharge();
+                    }
+                }
+            }
         }
 
         private void PlayBounceEffects()
@@ -567,12 +609,14 @@ namespace RageRunGames.PogostickController
             {
                 if (isGrounded)
                 {
+                    // yerdeyken eski davranış
                     spring.enableSuspensionForce = false;
                 }
                 else
                 {
-                    jumpBufferTimer = settings.jumpBufferTimeMax;
-                    jumpTimer = timeToJumpAfterBuffer;
+                    // ★ NEW: Havadayken buffer BAŞLATMA. Sadece "tutuyorum" de.
+                    // jumpBufferTimer = settings.jumpBufferTimeMax;  // (KAPALI)
+                    // jumpTimer = timeToJumpAfterBuffer;             // (KAPALI)
                 }
 
                 OnSlidingPlatform = false;
@@ -583,6 +627,7 @@ namespace RageRunGames.PogostickController
 
         private void HandleJumpKeyHold()
         {
+            // Eski buffer davranışı yalnız YERDEyken kullanılmaya devam ediyor
             if (jumpBufferTimer > 0)
             {
                 jumpBufferTimer -= Time.deltaTime;
@@ -596,12 +641,14 @@ namespace RageRunGames.PogostickController
 
             bool jumpKeyHeld = Input.GetKey(settings.jumpKey);
 
+            // Hem havada hem yerde tutulurken charge birikmesine izin ver
             if (jumpKeyHeld && HoldingJumpKey && !isJumpKeyPressed)
             {
                 AccumulateJumpForce();
                 UpdateCharacterPositionsDuringJumpAccumulation();
             }
 
+            // YERDE uzun basma (mevcut tasarımın aynısı)
             if (jumpKeyHeld && isGrounded && HoldingJumpKey && !isJumpKeyPressed)
             {
                 groundHoldTimer += Time.deltaTime;
@@ -656,7 +703,6 @@ namespace RageRunGames.PogostickController
             nvAccumulatedForce.Value = currentAccumulatedForce;
         }
         
-
         private void UpdateCharacterPositionsDuringJumpAccumulation()
         {
             if (isGrounded)
@@ -669,7 +715,7 @@ namespace RageRunGames.PogostickController
                 );
                 characterModelTransform.GetChild(0).localPosition = currentCharacterPos;
 
-                for (int i = 0; i < otherTransformsToMove.Length; i++)
+            for (int i = 0; i < otherTransformsToMove.Length; i++)
                 {
                     var otherTransformPosition = otherTransformsToMove[i].localPosition;
                     otherTransformPosition.y = Mathf.Lerp(
@@ -688,6 +734,59 @@ namespace RageRunGames.PogostickController
         private void ApplyChargeVisual(float forceValue)
         {
             float t = Mathf.Clamp01(forceValue / settings.maxAccumulatedForce);
+
+            // ★★★ PROXY RELAX: yalnızca !IsOwner iken çalışır
+            if (!IsOwner)
+            {
+                const float EPS = 0.0001f;
+
+                // Edge detect: force > 0'dan ≈0'a düştü → relax başlat
+                if (!_proxyRelaxActive && _proxyPrevForce > EPS && t <= EPS)
+                {
+                    _proxyRelaxActive = true;
+                    _proxyRelaxElapsed = 0f;
+
+                    // Başlangıç noktalarını cachele (mevcut pozdan idle'a döneceğiz)
+                    _relaxStartYChar = characterModelTransform.GetChild(0).localPosition.y;
+                    for (int i = 0; i < otherTransformsToMove.Length; i++)
+                        _relaxStartYOthers[i] = otherTransformsToMove[i].localPosition.y;
+                }
+
+                // Relax sürerken force yeniden artarsa → relax iptal
+                if (_proxyRelaxActive && t > EPS)
+                {
+                    _proxyRelaxActive = false;
+                }
+
+                // Relax aktifse: snap YAPMA, yumuşak dönüş uygula
+                if (_proxyRelaxActive)
+                {
+                    _proxyRelaxElapsed += Time.deltaTime;
+                    float s = Mathf.Clamp01(_proxyRelaxElapsed / ProxyRelaxDuration);
+
+                    // karakter
+                    var lpChar = characterModelTransform.GetChild(0).localPosition;
+                    lpChar.y = Mathf.Lerp(_relaxStartYChar, initialPlayerCharacterTransformPosY, s);
+                    characterModelTransform.GetChild(0).localPosition = lpChar;
+
+                    // diğer parçalar
+                    for (int i = 0; i < otherTransformsToMove.Length; i++)
+                    {
+                        var p = otherTransformsToMove[i].localPosition;
+                        p.y = Mathf.Lerp(_relaxStartYOthers[i], initialYPositions[i], s);
+                        otherTransformsToMove[i].localPosition = p;
+                    }
+
+                    if (s >= 1f) _proxyRelaxActive = false;
+
+                    _proxyPrevForce = forceValue; // sonraki kare için güncelle
+                    return; // ★ snap/normal akışı atla
+                }
+
+                _proxyPrevForce = forceValue; // normal akışa devam edilecek
+            }
+
+            // --- MEVCUT AKIŞ ---
 
             // t ~ 0 ise ANINDA başlangıç pozisyonlarına dön (snap)
             if (t <= 0.0001f)
@@ -726,15 +825,31 @@ namespace RageRunGames.PogostickController
             }
         }
 
-
+        // ★ NEW: Havada bırakınca charge iptali (ve genel sıfırlama)
+        private void CancelCharge()
+        {
+            currentAccumulatedForce = 0f;
+            accumulatedForce = 0f;
+            nvAccumulatedForce.Value = 0f; // proxy görselini de sıfırla
+            HoldingJumpKey = false;
+        }
 
         private void HandleJumpKeyRelease()
         {
-            if (Input.GetKeyUp(settings.jumpKey) && isGrounded && HoldingJumpKey)
+            if (Input.GetKeyUp(settings.jumpKey))
             {
-                spring.enableSuspensionForce = true;
-                isJumpKeyPressed = true;
-                HoldingJumpKey = false;
+                if (isGrounded && HoldingJumpKey)
+                {
+                    // yerdeki mevcut davranış
+                    spring.enableSuspensionForce = true;
+                    isJumpKeyPressed = true;
+                    HoldingJumpKey = false;
+                }
+                else if (!isGrounded)
+                {
+                    // ★ NEW: Havadayken bırakınca iptal
+                    CancelCharge();
+                }
             }
         }
 
@@ -1032,7 +1147,6 @@ namespace RageRunGames.PogostickController
 
             _uprightTween = transform
                 .DORotateQuaternion(firstTarget, dur)
-                // ESKİ: SetUpdate(UpdateType.Fixed) YOK
                 .OnComplete(() =>
                 {
                     // bittiğinde isteğe göre yaw'ı kameraya hizala
@@ -1042,8 +1156,6 @@ namespace RageRunGames.PogostickController
                     xRotation = 0f;
                     zRotation = 0f;
                     yRotation = finalYaw;
-
-                    // (ESKİ) hedef cache güncelleme/bastırma yok
 
                     // ★★ NEW (kalsın): Kurtarma pipeline (3 aşama)
                     UnstuckPipeline();
