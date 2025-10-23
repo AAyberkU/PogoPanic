@@ -28,8 +28,7 @@ public class MusicManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-
+        
         // Safety setup for looping
         if (mainMenuSource != null)
         {

@@ -79,7 +79,7 @@ namespace Pogo.UI
             CloseAllPanels();
             GameStateManager.Instance?.SetState(GameState.MainMenu);
 
-            // ✅ Cleanly end and destroy NetworkManager before loading menu
+            // ✅ Cleanly end network session before loading menu
             EndNetworkSession();
 
             if (string.IsNullOrWhiteSpace(mainMenuSceneName))
@@ -221,21 +221,35 @@ namespace Pogo.UI
             }
         }
 
-        // ✅ Fully ends and destroys any lingering NetworkManager
+        // ✅ Transport ismini bilmeden güvenli kapatma (INetworkTransport.Shutdown)
         void EndNetworkSession()
         {
             var nm = Unity.Netcode.NetworkManager.Singleton;
-            if (nm != null)
+            if (nm == null) return;
+
+            try
             {
-                if (nm.IsListening)
+                // 1) Transport'u varsa kapat (hangi transport olduğu önemli değil)
+                var transport = nm.NetworkConfig != null ? nm.NetworkConfig.NetworkTransport : null;
+                if (transport != null)
                 {
-                    nm.Shutdown();
-                    Debug.Log("[PauseMenu] Network session shutdown completed.");
+                    Debug.Log("[PauseMenu] Shutting down transport...");
+                    transport.Shutdown();
                 }
 
-                // ✅ Destroy the persistent object so new scene can spawn fresh one
-                Destroy(nm.gameObject);
-                Debug.Log("[PauseMenu] NetworkManager destroyed before scene reload.");
+                // 2) NetworkManager'ı kapat (Destroy etme)
+                if (nm.IsListening)
+                {
+                    Debug.Log("[PauseMenu] Shutting down NetworkManager...");
+                    nm.Shutdown();
+                }
+
+                // 3) Objeyi canlı bırak (coroutine'ler güvenle tamamlansın)
+                Debug.Log("[PauseMenu] NetworkManager shutdown complete — object kept alive.");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[PauseMenu] EndNetworkSession exception: {ex.Message}");
             }
         }
     }

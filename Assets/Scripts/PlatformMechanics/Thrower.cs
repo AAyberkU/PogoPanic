@@ -32,9 +32,17 @@ public class Thrower : NetworkBehaviour
 
     void Update()
     {
+        // ---- MINIMAL GUARDLAR ----
+        // NetworkManager henüz yoksa (menüdeyken, veya unload sırasında) hiç çalışmayalım
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return;
+
+        // Yalnızca server ateş etsin (mevcut davranışı korur)
         if (!IsServer) return;
 
-        double now = NetworkManager.ServerTime.Time;
+        // ServerTime'a güvenli erişim
+        double now = nm.ServerTime.Time;
+
         if (now >= nextFireServerTime)
         {
             Shoot();

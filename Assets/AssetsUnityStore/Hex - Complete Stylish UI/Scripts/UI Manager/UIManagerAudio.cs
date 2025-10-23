@@ -30,7 +30,6 @@ namespace Michsky.UI.Hex
             }
 
             instance = this;
-            DontDestroyOnLoad(gameObject);
             // ── FIX #2 : always cache the AudioSource reference ─────────────
             audioSource = GetComponent<AudioSource>();
         }

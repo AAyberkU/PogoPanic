@@ -9277,6 +9277,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props
       objectReference: {fileID: 0}
+    - target: {fileID: 4550642289543974110, guid: 018bce9f4decf594ebba6aaf5c124c82, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4550642289543974110, guid: 018bce9f4decf594ebba6aaf5c124c82, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -47.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 4550642289543974110, guid: 018bce9f4decf594ebba6aaf5c124c82, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 26.624998
+      objectReference: {fileID: 0}
     - target: {fileID: 8702508253892847599, guid: 018bce9f4decf594ebba6aaf5c124c82, type: 3}
       propertyPath: m_Convex
       value: 0
@@ -21044,7 +21056,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 279.55, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1025268039
 MonoBehaviour:
