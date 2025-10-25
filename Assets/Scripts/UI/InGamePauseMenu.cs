@@ -237,15 +237,16 @@ namespace Pogo.UI
                     transport.Shutdown();
                 }
 
-                // 2) NetworkManager'ı kapat (Destroy etme)
+                // 2) NetworkManager'ı kapat
                 if (nm.IsListening)
                 {
-                    Debug.Log("[PauseMenu] Shutting down NetworkManager...");
+                    Debug.Log("[PauseMenu] Shutting down NetworkManager (NGO)...");
                     nm.Shutdown();
                 }
 
-                // 3) Objeyi canlı bırak (coroutine'ler güvenle tamamlansın)
-                Debug.Log("[PauseMenu] NetworkManager shutdown complete — object kept alive.");
+                // 3) Eski NetworkManager objesini tamamen yok et
+                Debug.Log("[PauseMenu] Destroying NetworkManager GameObject for clean restart...");
+                Destroy(nm.gameObject);
             }
             catch (System.Exception ex)
             {
