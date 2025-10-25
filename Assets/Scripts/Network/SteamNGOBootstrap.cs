@@ -249,8 +249,28 @@ public class SteamNGOBootstrap : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // YENİ: round bittiğinde/menüye dönerken çağrılacak state reset helper
-    // Bu, eski lobby bilgisinin / eski host bilgisinin bir sonraki tura sızmasını engeller.
+    // PUBLIC: Menüye dönerken çağıracağız.
+    // Steam lobby'den çık + lokal state sıfırla.
+    public void LeaveLobbyAndReset()
+    {
+        if (currentLobby.m_SteamID != 0)
+        {
+            try
+            {
+                SteamMatchmaking.LeaveLobby(currentLobby);
+                Debug.Log("[Bootstrap] Left lobby: " + currentLobby.m_SteamID);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning("[Bootstrap] LeaveLobby failed: " + ex.Message);
+            }
+        }
+
+        ResetLobbyState();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // round bittiğinde/menüye dönerken çağrılacak internal state reset helper
     // HostWithLobbyOnly() ve PlayHostWithLobbyAndLoad() başında da çağrılıyor.
     private void ResetLobbyState()
     {

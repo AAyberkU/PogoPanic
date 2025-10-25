@@ -79,6 +79,12 @@ namespace Pogo.UI
             CloseAllPanels();
             GameStateManager.Instance?.SetState(GameState.MainMenu);
 
+            // Steam lobby'den çık ve bootstrap state'ini temizle
+            if (SteamNGOBootstrap.Instance != null)
+            {
+                SteamNGOBootstrap.Instance.LeaveLobbyAndReset();
+            }
+
             // ✅ Cleanly end network session before loading menu
             EndNetworkSession();
 
@@ -109,6 +115,12 @@ namespace Pogo.UI
         {
             HideCursor();
             CloseAllPanels();
+
+            // Steam lobby'den çık ve bootstrap state'ini temizle
+            if (SteamNGOBootstrap.Instance != null)
+            {
+                SteamNGOBootstrap.Instance.LeaveLobbyAndReset();
+            }
 
             // ✅ Also clean up network before quitting
             EndNetworkSession();
