@@ -82,6 +82,9 @@ public class SteamNGOBootstrap : MonoBehaviour
 
         if (!CheckPrereqs()) { isStartingFlow = false; return; }
 
+        // YENİ: yeni lobby kurmadan önce eski tur state'ini sıfırla
+        ResetLobbyState();
+
         pendingSceneToLoad = null; // bu akışta sahne yüklenmeyecek
 
         var type = lobbyType ?? defaultLobbyType;
@@ -100,6 +103,9 @@ public class SteamNGOBootstrap : MonoBehaviour
         isStartingFlow = true;
 
         if (!CheckPrereqs()) { isStartingFlow = false; return; }
+
+        // YENİ: yeni lobby kurmadan önce eski tur state'ini sıfırla
+        ResetLobbyState();
 
         pendingSceneToLoad = sceneName;
 
@@ -162,13 +168,30 @@ public class SteamNGOBootstrap : MonoBehaviour
         var lobby = new CSteamID(e.m_ulSteamIDLobby);
         currentLobby = lobby;
 
-        // Host isek client akışını tetiklemeyelim
-        var isOwner = SteamMatchmaking.GetLobbyOwner(lobby) == SteamUser.GetSteamID();
-        if (isOwner)
+        // Kim host zannediyoruz?
+        bool steamThinksIAmOwner =
+            (SteamMatchmaking.GetLobbyOwner(lobby) == SteamUser.GetSteamID());
+
+        // Network tarafında gerçekten host muyuz?
+        // (Eğer zaten host olarak dinliyorsak, client başlatmaya çalışmayalım.)
+        bool actuallyRunningHost =
+            NetworkManager.Singleton != null &&
+            NetworkManager.Singleton.IsHost &&
+            NetworkManager.Singleton.IsListening;
+
+        // GÜNCELLEME:
+        // Eski kod: "steamThinksIAmOwner == true ise direkt return"
+        // Yeni kod: sadece gerçekten host olarak çalışıyorsak return et.
+        if (steamThinksIAmOwner && actuallyRunningHost)
         {
             Debug.Log("[Bootstrap] Entered own lobby (host).");
             return;
         }
+
+        // Buraya düşüyorsak:
+        // - ya gerçekten host değiliz (yeni turda client'ız),
+        // - ya da Steam yanlışlıkla 'sen ownersın' dedi ama biz aslında host modunda değiliz.
+        // Bu durumda client flow'u çalıştırıyoruz.
 
         // Client: host ID'yi al
         var hostStr = SteamMatchmaking.GetLobbyData(lobby, "host");
@@ -223,5 +246,16 @@ public class SteamNGOBootstrap : MonoBehaviour
             Debug.LogError("[Bootstrap] Could not set ConnectToSteamID on transport.");
             return false;
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // YENİ: round bittiğinde/menüye dönerken çağrılacak state reset helper
+    // Bu, eski lobby bilgisinin / eski host bilgisinin bir sonraki tura sızmasını engeller.
+    // HostWithLobbyOnly() ve PlayHostWithLobbyAndLoad() başında da çağrılıyor.
+    private void ResetLobbyState()
+    {
+        currentLobby = default;
+        pendingSceneToLoad = null;
+        isStartingFlow = false;
     }
 }
