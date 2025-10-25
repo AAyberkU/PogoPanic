@@ -36200,7 +36200,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1724453884}
   - component: {fileID: 1724453885}
-  - component: {fileID: 1724453886}
   m_Layer: 0
   m_Name: SteamNGOBootstrap
   m_TagString: Untagged
@@ -36238,26 +36237,6 @@ MonoBehaviour:
   defaultLobbyType: 1
   defaultMaxMembers: 8
   openInviteOverlayOnHost: 0
---- !u!114 &1724453886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724453883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9ccf1a2d68727c4f8b29d8409c26737, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainMenuSceneName: MainMenu
-  clientDelaySeconds: 0
-  hostDelaySeconds: 0
-  leaveSteamLobby: 1
-  shutdownNetwork: 1
-  useRealtimeWait: 1
-  returnHostOnServerStop: 0
-  verboseLogs: 1
 --- !u!1 &1727290419
 GameObject:
   m_ObjectHideFlags: 0
